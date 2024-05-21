@@ -1,19 +1,20 @@
 import {useState} from 'react';
-import {connect} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
-import {addTodo} from '../../store/actions';
+import {addTodo} from '../../store/TodoSlice';
 import styles from './todo.module.css';
 
-
-
-function NewTodo({addTodo}) {
+export default function NewTodo() {
   const [newTodo, setNewTodo] = useState('');
+  const dispatch = useDispatch();
+
   const handleAddTodo = () => {
     if (newTodo.trim() !== '') {
-      addTodo(newTodo);
+      dispatch(addTodo({title: newTodo}));
       setNewTodo('');
     }
   };
+
   return (
     <div className={styles.input_wrapper}>
       <input
@@ -29,8 +30,3 @@ function NewTodo({addTodo}) {
     </div>
   )
 }
-
-const mapDispatchToProps = {
-  addTodo,
-}
-export default connect(() => ({}), mapDispatchToProps)(NewTodo)

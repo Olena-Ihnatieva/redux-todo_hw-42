@@ -1,45 +1,40 @@
-import {useState} from 'react';
-import {connect} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
-import {deleteTodo} from '../../store/actions';
+import {toggleTodo, deleteTodo} from '../../store/TodoSlice';
 import styles from './todo.module.css';
 
-function TodoItem({todo, deleteTodo}) {
-  const [checked, setChecked] = useState(todo.done);
+export default function TodoItem({todo}) {
+  const dispatch = useDispatch();
+  const {id, title, done} = todo;
 
   const handleCheckboxChange = () => {
-    setChecked(!checked);
+    dispatch(toggleTodo({id}));
   };
 
-  const handleDeleteTodo = (id) => {
-    deleteTodo(id);
-  }
+  const handleDeleteTodo = () => {
+    dispatch(deleteTodo({id}));
+  };
 
   return (
     <div className={styles.todo_item}>
       <div className={styles.input_wrapper_item}>
         <input
           type="checkbox"
-          checked={todo.done}
+          checked={done}
           onChange={handleCheckboxChange}
           className={styles.todo_checkbox}
         />
         <div
-          className={`${styles.todo_title} ${checked ? styles.checked : ''}`}>{todo.title}
+          className={`${styles.todo_title} ${done ? styles.checked : ''}`}>
+          {title}
         </div>
       </div>
       <div
         className={styles.todo_btn}
-        onClick={() => handleDeleteTodo(todo.id)}
+        onClick={handleDeleteTodo}
       >
         Delete
       </div>
     </div>
   );
 }
-
-const mapDispatchToProps = {
-  deleteTodo,
-}
-
-export default connect(() => ({}), mapDispatchToProps)(TodoItem)
